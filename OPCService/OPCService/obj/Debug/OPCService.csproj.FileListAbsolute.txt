@@ -22,3 +22,15 @@ C:\Users\ThinkPad\Desktop\weiming\software\OPCService\OPCService\obj\Debug\OPCSe
 C:\Users\ThinkPad\Desktop\weiming\software\OPCService\OPCService\obj\Debug\OPCService.csproj.CoreCompileInputs.cache
 C:\Users\ThinkPad\Desktop\weiming\software\OPCService\OPCService\obj\Debug\OPCService.exe
 C:\Users\ThinkPad\Desktop\weiming\software\OPCService\OPCService\obj\Debug\OPCService.pdb
+C:\Users\ThinkPad\Desktop\OPC\OPCService\OPCService\bin\Debug\OPCService.exe.config
+C:\Users\ThinkPad\Desktop\OPC\OPCService\OPCService\bin\Debug\OPCService.exe
+C:\Users\ThinkPad\Desktop\OPC\OPCService\OPCService\bin\Debug\OPCService.pdb
+C:\Users\ThinkPad\Desktop\OPC\OPCService\OPCService\obj\Debug\OPCService.csproj.AssemblyReference.cache
+C:\Users\ThinkPad\Desktop\OPC\OPCService\OPCService\obj\Debug\Interop.OPCAutomation.dll
+C:\Users\ThinkPad\Desktop\OPC\OPCService\OPCService\obj\Debug\OPCService.csproj.ResolveComReference.cache
+C:\Users\ThinkPad\Desktop\OPC\OPCService\OPCService\obj\Debug\OPCService.Form1.resources
+C:\Users\ThinkPad\Desktop\OPC\OPCService\OPCService\obj\Debug\OPCService.Properties.Resources.resources
+C:\Users\ThinkPad\Desktop\OPC\OPCService\OPCService\obj\Debug\OPCService.csproj.GenerateResource.cache
+C:\Users\ThinkPad\Desktop\OPC\OPCService\OPCService\obj\Debug\OPCService.csproj.CoreCompileInputs.cache
+C:\Users\ThinkPad\Desktop\OPC\OPCService\OPCService\obj\Debug\OPCService.exe
+C:\Users\ThinkPad\Desktop\OPC\OPCService\OPCService\obj\Debug\OPCService.pdb

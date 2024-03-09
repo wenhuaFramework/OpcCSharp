@@ -124,12 +124,13 @@ namespace OPCService
         {
             try
             {
-                KepGroups = KepServer.OPCGroups;
-                KepGroup = KepGroups.Add("OPCDOTNETGROUP");
+                KepGroups = KepServer.OPCGroups;            // 获取服务器的 OPC groups 集合
+                KepGroup = KepGroups.Add("OPCDOTNETGROUP"); // 添加一个新的 OPC group
                 SetGroupProperty();
                 KepGroup.DataChange += new DIOPCGroupEvent_DataChangeEventHandler(KepGroup_DataChange);
                 KepGroup.AsyncWriteComplete += new DIOPCGroupEvent_AsyncWriteCompleteEventHandler(KepGroup_AsyncWriteComplete);
-                KepItems = KepGroup.OPCItems;
+                KepGroup.AsyncReadComplete += new DIOPCGroupEvent_AsyncReadCompleteEventHandler(KepGroup_AsyncReadComplete);
+                KepItems = KepGroup.OPCItems;               // 获取该 group 的 Items 集合
             }
             catch (Exception err)
             {
@@ -230,6 +231,16 @@ namespace OPCService
             }
         }
 
+        void KepGroup_AsyncReadComplete(int transactionID, int numItems, ref Array clientHandles, ref Array itemValues, ref Array qualities, ref Array timeStamps, ref Array errors)
+        {
+            // 处理异步读取完成的结果
+            Console.WriteLine("Async Read completed:");
+            for (int i = 1; i <= numItems; i++)
+            {
+                Console.WriteLine($"Item: {clientHandles.GetValue(i)} Value: {itemValues.GetValue(i)} Quality: {qualities.GetValue(i)} Timestamp: {timeStamps.GetValue(i)}");
+            }
+        }
+
         /// <summary>
         /// 每当项数据有变化时执行的事件
         /// </summary>
@@ -252,7 +263,7 @@ namespace OPCService
         }
 
         /// <summary>
-        /// 选择列表项时处理的事情
+        /// 选择OPC服务器列表项时处理的事情
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -275,7 +286,7 @@ namespace OPCService
                     KepItems.Remove(KepItems.Count, ref serverHandle, out Errors);
                 }
                 itmHandleClient = 1;
-                KepItem = KepItems.AddItem(listBox1.SelectedItem.ToString(), itmHandleClient);
+                KepItem = KepItems.AddItem(listBox1.SelectedItem.ToString(), itmHandleClient);  // 添加要读取的 OPC Item
                 itmHandleServer = KepItem.ServerHandle;
             }
             catch (Exception err)

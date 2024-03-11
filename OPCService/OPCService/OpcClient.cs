@@ -61,6 +61,7 @@ namespace OPCService
                 OPCGroup opcGroup = opcGroups.Add(groupName);
                 opcGroup.IsActive = true;
                 opcGroup.UpdateRate = 1000;
+                opcGroup.IsSubscribed = true;//使用订阅功能，即可以异步，默认false
                 opcGroup.DataChange += new DIOPCGroupEvent_DataChangeEventHandler(OnDataChange);
                 _groups.Add(groupName, opcGroup);
                 return true;
@@ -155,6 +156,61 @@ namespace OPCService
             {
                 Console.WriteLine($"Error writing value to item {itemName}: {ex.Message}");
                 return false;
+            }
+        }
+
+        public bool WriteItemValues(string groupName, Dictionary<string, object> itemValues)
+        {
+            try
+            {
+                if (_groups.TryGetValue(groupName, out OPCGroup opcGroup))
+                {
+                    OPCItems opcItems = opcGroup.OPCItems;
+
+                    //异步写时，Array数组从下标1开始而非0！
+                    int[] tempServerHandles = new int[opcItems.Count + 1];
+                    object[] tempValues = new object[opcItems.Count + 1];
+                    int index = 0;
+                    tempServerHandles[index] = 0;
+                    tempValues[index] = "";
+
+                    foreach (KeyValuePair<string, object> kvp in itemValues) {
+                        index++;
+                        if (_items.TryGetValue(kvp.Key, out OPCItem opcItem))
+                        {
+                            tempServerHandles[index] = opcItem.ServerHandle;
+                            tempValues[index] = kvp.Value;
+                        }
+                    }
+                    
+                    Array opcItemServerHandles = (Array)tempServerHandles;
+                    Array opcItemValues = (Array)tempValues;
+                    Array errors;
+                    int cancelID;
+                    opcGroup.AsyncWriteComplete += new DIOPCGroupEvent_AsyncWriteCompleteEventHandler(OnAsyncWriteComplete);
+                    opcGroup.AsyncWrite(itemValues.Count, ref opcItemServerHandles, ref opcItemValues, out errors, 0, out cancelID);
+                    
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine($"Group '{groupName}' not found.");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error writing values to items: {ex.Message}");
+                return false;
+            }
+        }
+
+        private void OnAsyncWriteComplete(int TransactionID, int NumItems, ref Array ClientHandles, ref Array Errors)
+        {
+            Console.WriteLine("Async Write Complete event received:");
+            for (int i = 1; i <= NumItems; i++)
+            {
+                Console.WriteLine("Tran:" + TransactionID.ToString() + "   CH:" + ClientHandles.GetValue(i).ToString() + "   Error:" + Errors.GetValue(i).ToString());
             }
         }
 

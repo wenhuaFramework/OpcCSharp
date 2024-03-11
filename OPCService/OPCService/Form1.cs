@@ -305,7 +305,8 @@ namespace OPCService
         /// </summary>
         private void Form1_Load(object sender, EventArgs e)
         {
-            GetLocalServer();
+            //GetLocalServer();
+            opcClientClass();
         }
         /// <summary>
         /// 关闭窗体时处理的事情
@@ -390,6 +391,59 @@ namespace OPCService
         private void groupBox1_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void opcClientClass()
+        {
+            using (var opcClient = new OpcClient("Matrikon.OPC.Simulation.1"))
+            {
+                if (opcClient.Connect())
+                {
+                    if (opcClient.AddGroup("Group1"))
+                    {
+                        if (opcClient.AddItem("Group1", "Bucket Brigade.Real8"))
+                        {
+                            Console.WriteLine("Item added successfully. Reading data...");
+                            object value = opcClient.ReadItemValue("Group1", "Bucket Brigade.Real8");
+                            if (value != null)
+                            {
+                                Console.WriteLine($"Value of Item 'Bucket Brigade.Real8': {value}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Failed to read item value.");
+                            }
+
+                            int newVal = Convert.ToInt32(value) + 1;
+                            if (opcClient.WriteItemValue("Group1", "Bucket Brigade.Real8", newVal))
+                            {
+                                Console.WriteLine("Item Bucket Brigade.Real8 write successfully");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Failed to write item value.");
+                            }
+
+                            //异步写入批量值 
+                            Dictionary<string, object> itemValues = new Dictionary<string, object>();
+                            itemValues.Add("Bucket Brigade.Real8", 52);
+                            opcClient.WriteItemValues("Group1", itemValues);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed to add item.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to add group.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Failed to connect to OPC server.");
+                }
+            }
         }
 
     }

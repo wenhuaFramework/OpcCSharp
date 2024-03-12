@@ -305,7 +305,7 @@ namespace OPCService
         /// </summary>
         private void Form1_Load(object sender, EventArgs e)
         {
-            //GetLocalServer();
+            GetLocalServer();
             opcClientClass();
         }
         /// <summary>
@@ -425,8 +425,10 @@ namespace OPCService
                             }
 
                             //异步写入批量值 
+                            //opcClient.AddItem("Group1", "Bucket Brigade.Real4");
                             Dictionary<string, object> itemValues = new Dictionary<string, object>();
-                            itemValues.Add("Bucket Brigade.Real8", 52);
+                            itemValues.Add("Bucket Brigade.Real8", 58);
+                            //itemValues.Add("Bucket Brigade.Real4", 25);
                             opcClient.WriteItemValues("Group1", itemValues);
                         }
                         else
